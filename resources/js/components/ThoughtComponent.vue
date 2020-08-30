@@ -27,19 +27,27 @@
         },
         methods: {
             onClickDelete(){
-                this.$emit('delete')
+                axios.delete(`/thoughts/${this.thought.id}`).then( () => {
+                    this.$emit('delete')
+                })                
             },
             onClickEdit(){
                 this.editMode = true
             },
             onClickUpdate(){
-                this.editMode = false
-                this.$emit('update', thought)
+                let params = {
+                    description : this.thought.description
+                }
+                axios.put(`/thoughts/${this.thought.id}`, params).then((response) => {
+                    this.editMode = false
+                    let thought = response.data
+                    this.$emit('update', thought)
+                });
             }
         },
 
         mounted() {
-            console.log('Component mounted.')
+            // console.log('Component mounted.')
         }
     }
 </script>

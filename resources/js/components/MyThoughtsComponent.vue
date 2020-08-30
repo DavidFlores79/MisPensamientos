@@ -20,11 +20,8 @@
     export default {
         data(){
             return {
-                thoughts:[{
-                    id : 1,
-                    description : 'Mi primer pensamiento',
-                    created_at : '01/01/1999'
-                }]
+                //se iniciara con un arreglo vacio
+                thoughts:[]
             }
         },
         methods:{
@@ -41,7 +38,10 @@
         
 
         mounted() {
-            console.log('Component mounted.')
+            // console.log('Component mounted.')
+            axios.get('/thoughts').then((response) => {
+                this.thoughts = response.data;
+            })
         }
 
     }

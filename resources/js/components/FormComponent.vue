@@ -13,6 +13,7 @@
             </form>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -24,21 +25,35 @@
         },
         methods: {
             newThought(){
-                let thought = {
-                    id : 2,
-                    description : this.description,
-                    created_at : '01011999'
-                }
+
+                //parametros con datos para enviar al servidor
+                const params = {
+                    description : this.description
+                };
+
+                this.description = ''
+
+
+                axios.post('/thoughts', params).then((response) => {
+                    let thought = response.data;
+                    this.$emit('new',thought);
+                });
+                
+                // let thought = {
+                //     id : 2,
+                //     description : this.description,
+                //     created_at : '01011999'
+                // }
                 // alert(this.description)
                 //para generar un evento
-                this.$emit('new',thought)
+                // this.$emit('new',thought)
                 //limpiamos la descripcion
-                this.description = ''
+                // this.description = ''
             }
         },
 
         mounted() {
-            console.log('Component mounted.')
+            // console.log('Component mounted.')
         }
 
     }

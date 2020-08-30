@@ -49430,6 +49430,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -49440,20 +49441,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         newThought: function newThought() {
-            var thought = {
-                id: 2,
-                description: this.description,
-                created_at: '01011999'
-                // alert(this.description)
-                //para generar un evento
-            };this.$emit('new', thought);
-            //limpiamos la descripcion
+            var _this = this;
+
+            //parametros con datos para enviar al servidor
+            var params = {
+                description: this.description
+            };
+
             this.description = '';
+
+            axios.post('/thoughts', params).then(function (response) {
+                var thought = response.data;
+                _this.$emit('new', thought);
+            });
+
+            // let thought = {
+            //     id : 2,
+            //     description : this.description,
+            //     created_at : '01011999'
+            // }
+            // alert(this.description)
+            //para generar un evento
+            // this.$emit('new',thought)
+            //limpiamos la descripcion
+            // this.description = ''
         }
     },
 
     mounted: function mounted() {
-        console.log('Component mounted.');
+        // console.log('Component mounted.')
     }
 });
 
@@ -49609,11 +49625,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            thoughts: [{
-                id: 1,
-                description: 'Mi primer pensamiento',
-                created_at: '01/01/1999'
-            }]
+            //se iniciara con un arreglo vacio
+            thoughts: []
         };
     },
 
@@ -49630,7 +49643,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     mounted: function mounted() {
-        console.log('Component mounted.');
+        var _this = this;
+
+        // console.log('Component mounted.')
+        axios.get('/thoughts').then(function (response) {
+            _this.thoughts = response.data;
+        });
     }
 });
 
@@ -49761,19 +49779,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         onClickDelete: function onClickDelete() {
-            this.$emit('delete');
+            var _this = this;
+
+            axios.delete('/thoughts/' + this.thought.id).then(function () {
+                _this.$emit('delete');
+            });
         },
         onClickEdit: function onClickEdit() {
             this.editMode = true;
         },
         onClickUpdate: function onClickUpdate() {
-            this.editMode = false;
-            this.$emit('update', thought);
+            var _this2 = this;
+
+            var params = {
+                description: this.thought.description
+            };
+            axios.put('/thoughts/' + this.thought.id, params).then(function (response) {
+                _this2.editMode = false;
+                var thought = response.data;
+                _this2.$emit('update', thought);
+            });
         }
     },
 
     mounted: function mounted() {
-        console.log('Component mounted.');
+        // console.log('Component mounted.')
     }
 });
 
